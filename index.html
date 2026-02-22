@@ -1,110 +1,158 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Asgard — Скриншот позиции</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <div class="app">
-        <header class="app-header">
-            <h1>Генератор скриншотов</h1>
-            <p class="subtitle">Заполни данные позиции — бот сделает красивый скриншот</p>
-        </header>
+      <header class="app-header">
+        <h1>Генератор скриншотов</h1>
+        <p class="subtitle">
+          Заполни данные позиции — бот сделает красивый скриншот
+        </p>
+      </header>
 
-        <div id="tradeForm">
-            <div class="field">
-                <label for="symbol">Символ</label>
-                <input type="text" id="symbol" placeholder="BTCUSDT" value="BTCUSDT">
-                <div class="field-hint" id="hintSymbol">Введите торговую пару</div>
-            </div>
-
-            <div class="field">
-                <label>Направление</label>
-                <div class="toggle-group" id="directionToggle">
-                    <button type="button" class="toggle-btn active" data-value="Long">
-                        <span class="dot dot-long"></span> Лонг
-                    </button>
-                    <button type="button" class="toggle-btn" data-value="Short">
-                        <span class="dot dot-short"></span> Шорт
-                    </button>
-                </div>
-            </div>
-
-            <div class="field">
-                <label>Режим маржи</label>
-                <div class="toggle-group" id="marginModeToggle">
-                    <button type="button" class="toggle-btn active" data-value="Cross">Кросс</button>
-                    <button type="button" class="toggle-btn" data-value="Isolated">Изолир.</button>
-                </div>
-            </div>
-
-            <div class="field">
-                <label for="leverage">Плечо: <span id="leverageValue" class="accent">20x</span></label>
-                <input type="range" id="leverage" min="1" max="200" value="20" step="1">
-            </div>
-
-            <div class="field">
-                <label for="entryPrice">Цена входа (USDT)</label>
-                <input type="text" inputmode="decimal" id="entryPrice" placeholder="83000.00">
-                <div class="field-hint" id="hintEntry">Введите цену входа (число &gt; 0)</div>
-            </div>
-
-            <div class="field">
-                <label for="exitPrice">Цена выхода / маркировки (USDT)</label>
-                <input type="text" inputmode="decimal" id="exitPrice" placeholder="84000.00">
-                <div class="field-hint" id="hintExit">Введите цену выхода (число &gt; 0)</div>
-            </div>
-
-            <div class="field">
-                <label for="margin">Маржа (USDT)</label>
-                <input type="text" inputmode="decimal" id="margin" placeholder="100.00">
-                <div class="field-hint" id="hintMargin">Введите маржу (число &gt; 0)</div>
-            </div>
-
-            <div class="field">
-                <label>Шаблоны</label>
-                <div class="checkbox-group" id="templateSelect">
-                    <label class="checkbox-card active">
-                        <input type="checkbox" value="binance_classic" checked>
-                        <span class="card-inner">
-                            <span class="card-title">Binance Classic</span>
-                            <span class="card-desc">Таблица позиции</span>
-                        </span>
-                    </label>
-                    <label class="checkbox-card">
-                        <input type="checkbox" value="weex_main">
-                        <span class="card-inner">
-                            <span class="card-title">WEEX Карточка</span>
-                            <span class="card-desc">Брендированная карта</span>
-                        </span>
-                    </label>
-                </div>
-                <div class="field-hint" id="hintTemplates">Выберите хотя бы один шаблон</div>
-            </div>
-
-            <div class="preview-box" id="preview" style="display:none;">
-                <div class="preview-title">Предварительный расчёт</div>
-                <div class="preview-row">
-                    <span class="preview-label">PnL:</span>
-                    <span class="preview-value" id="previewPnl">—</span>
-                </div>
-                <div class="preview-row">
-                    <span class="preview-label">ROI:</span>
-                    <span class="preview-value" id="previewRoi">—</span>
-                </div>
-                <div class="preview-row">
-                    <span class="preview-label">Размер:</span>
-                    <span class="preview-value" id="previewSize">—</span>
-                </div>
-            </div>
-
-            <button type="button" class="submit-btn" id="submitBtn">Сгенерировать</button>
+      <div id="tradeForm">
+        <div class="field">
+          <label for="symbol">Символ</label>
+          <input
+            type="text"
+            id="symbol"
+            placeholder="BTCUSDT"
+            value="BTCUSDT"
+          />
+          <div class="field-hint" id="hintSymbol">Введите торговую пару</div>
         </div>
+
+        <div class="field">
+          <label>Направление</label>
+          <div class="toggle-group" id="directionToggle">
+            <button type="button" class="toggle-btn active" data-value="Long">
+              <span class="dot dot-long"></span> Лонг
+            </button>
+            <button type="button" class="toggle-btn" data-value="Short">
+              <span class="dot dot-short"></span> Шорт
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Режим маржи</label>
+          <div class="toggle-group" id="marginModeToggle">
+            <button type="button" class="toggle-btn active" data-value="Cross">
+              Кросс
+            </button>
+            <button type="button" class="toggle-btn" data-value="Isolated">
+              Изолир.
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="leverage"
+            >Плечо: <span id="leverageValue" class="accent">20x</span></label
+          >
+          <input
+            type="range"
+            id="leverage"
+            min="1"
+            max="200"
+            value="20"
+            step="1"
+          />
+        </div>
+
+        <div class="field">
+          <label for="entryPrice">Цена входа (USDT)</label>
+          <input
+            type="text"
+            inputmode="decimal"
+            id="entryPrice"
+            placeholder="83000.00"
+          />
+          <div class="field-hint" id="hintEntry">
+            Введите цену входа (число &gt; 0)
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="exitPrice">Цена выхода / маркировки (USDT)</label>
+          <input
+            type="text"
+            inputmode="decimal"
+            id="exitPrice"
+            placeholder="84000.00"
+          />
+          <div class="field-hint" id="hintExit">
+            Введите цену выхода (число &gt; 0)
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="margin">Маржа (USDT)</label>
+          <input
+            type="text"
+            inputmode="decimal"
+            id="margin"
+            placeholder="100.00"
+          />
+          <div class="field-hint" id="hintMargin">
+            Введите маржу (число &gt; 0)
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Шаблоны</label>
+          <div class="checkbox-group" id="templateSelect">
+            <label class="checkbox-card active">
+              <input type="checkbox" value="binance_classic" checked />
+              <span class="card-inner">
+                <span class="card-title">WEEX Таблица</span>
+                <span class="card-desc">Таблица позиции</span>
+              </span>
+            </label>
+            <label class="checkbox-card">
+              <input type="checkbox" value="weex_main" />
+              <span class="card-inner">
+                <span class="card-title">WEEX Карточка</span>
+                <span class="card-desc">Брендированная карта</span>
+              </span>
+            </label>
+          </div>
+          <div class="field-hint" id="hintTemplates">
+            Выберите хотя бы один шаблон
+          </div>
+        </div>
+
+        <div class="preview-box" id="preview" style="display: none">
+          <div class="preview-title">Предварительный расчёт</div>
+          <div class="preview-row">
+            <span class="preview-label">PnL:</span>
+            <span class="preview-value" id="previewPnl">—</span>
+          </div>
+          <div class="preview-row">
+            <span class="preview-label">ROI:</span>
+            <span class="preview-value" id="previewRoi">—</span>
+          </div>
+          <div class="preview-row">
+            <span class="preview-label">Размер:</span>
+            <span class="preview-value" id="previewSize">—</span>
+          </div>
+        </div>
+
+        <button type="button" class="submit-btn" id="submitBtn">
+          Сгенерировать
+        </button>
+      </div>
     </div>
 
     <script src="app.js"></script>
-</body>
+  </body>
 </html>
