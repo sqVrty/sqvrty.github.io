@@ -118,3 +118,8 @@ body {
 }
 .submit-btn:active { transform: scale(0.98); opacity: 0.9; }
 .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Debug line (small, for diagnostics) */
+.debug-line {
+    margin-top: 12px; font-size: 11px; color: var(--text-dim); opacity: 0.8;
+}

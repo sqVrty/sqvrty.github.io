@@ -12,18 +12,29 @@
 window.onerror = function() { return false; };
 
 (function() {
-    function log() {}
+    var DEBUG = true; // set to false in production
+    function log() {
+        if (DEBUG && typeof console !== 'undefined' && console.log)
+            console.log.apply(console, ['[Asgard]'].concat(Array.prototype.slice.call(arguments)));
+    }
     function setWarn() {}
 
     // ── Telegram WebApp ──
     var tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+    var debugEl = document.getElementById('debugLine');
+    function setDebug(text) {
+        if (debugEl) debugEl.textContent = text;
+    }
     if (tg) {
         tg.expand();
         tg.ready();
         var hasInitData = tg.initData && tg.initData.length > 0;
+        setDebug('Режим: sendData. Telegram: да. initData: ' + (hasInitData ? 'да (' + tg.initData.length + ')' : 'нет'));
         if (!hasInitData) {
             setWarn('WARNING: initData пуст — откройте через кнопку в Telegram.');
         }
+    } else {
+        setDebug('Режим: браузер (не Telegram)');
     }
 
     function showAlert(text) {
@@ -186,21 +197,29 @@ window.onerror = function() { return false; };
     // ── Send via sendData (production — GitHub Pages) ──
     function sendViaTelegram(payload) {
         if (!tg || !tg.sendData) {
+            log('sendViaTelegram: no tg or sendData');
             showAlert('Telegram SDK недоступен. Откройте через кнопку в Telegram.');
             return;
         }
         var hasInit = tg.initData && tg.initData.length > 0;
         if (!hasInit) {
+            log('sendViaTelegram: no initData');
             showAlert('Нет связи с Telegram. Откройте WebApp заново через кнопку в чате.');
             return;
         }
+
+        var dataStr = JSON.stringify(payload);
+        log('sendViaTelegram: calling sendData, payload length=', dataStr.length, 'initData length=', tg.initData.length);
 
         submitBtn.disabled = true;
         submitBtn.textContent = 'Отправлено!';
 
         try {
-            tg.sendData(JSON.stringify(payload));
+            tg.sendData(dataStr);
+            log('sendViaTelegram: sendData() called (no callback in API, bot should receive web_app_data)');
+            setDebug('sendData вызван, длина ' + dataStr.length + '. Жди ответ бота.');
         } catch(e) {
+            log('sendViaTelegram: sendData threw', e);
             showAlert('Ошибка: ' + e.message);
             submitBtn.disabled = false;
             submitBtn.textContent = 'Сгенерировать';
