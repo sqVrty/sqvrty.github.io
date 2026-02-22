@@ -29,10 +29,7 @@ window.onerror = function() { return false; };
         tg.expand();
         tg.ready();
         var hasInitData = tg.initData && tg.initData.length > 0;
-        setDebug('Режим: sendData. Telegram: да. initData: ' + (hasInitData ? 'да (' + tg.initData.length + ')' : 'нет'));
-        if (!hasInitData) {
-            setWarn('WARNING: initData пуст — откройте через кнопку в Telegram.');
-        }
+        setDebug('Режим: sendData. Открой через кнопку «Создать скриншот» под полем ввода (не через Menu Button) — иначе данные не дойдут до бота.');
     } else {
         setDebug('Режим: браузер (не Telegram)');
     }
@@ -195,21 +192,16 @@ window.onerror = function() { return false; };
     }
 
     // ── Send via sendData (production — GitHub Pages) ──
+    // По документации Telegram: sendData() доставляет данные боту ТОЛЬКО если Web App
+    // открыт через Keyboard button (кнопка под полем ввода), не через Menu Button.
     function sendViaTelegram(payload) {
         if (!tg || !tg.sendData) {
             log('sendViaTelegram: no tg or sendData');
             showAlert('Telegram SDK недоступен. Откройте через кнопку в Telegram.');
             return;
         }
-        var hasInit = tg.initData && tg.initData.length > 0;
-        if (!hasInit) {
-            log('sendViaTelegram: no initData');
-            showAlert('Нет связи с Telegram. Откройте WebApp заново через кнопку в чате.');
-            return;
-        }
-
         var dataStr = JSON.stringify(payload);
-        log('sendViaTelegram: calling sendData, payload length=', dataStr.length, 'initData length=', tg.initData.length);
+        log('sendViaTelegram: calling sendData, payload length=', dataStr.length);
 
         submitBtn.disabled = true;
         submitBtn.textContent = 'Отправлено!';
