@@ -9,21 +9,11 @@
  * uses HTTP API. Otherwise uses sendData().
  */
 
-window.onerror = function(msg, src, line) {
-    var d = document.getElementById('debugBar');
-    if (d) { d.className = 'error'; d.textContent = 'ERR: ' + msg + ' @ ' + (src || '?') + ':' + line; }
-    return false;
-};
+window.onerror = function() { return false; };
 
 (function() {
-    var dbg = document.getElementById('debugBar');
-    var lines = [];
-    function log(msg) {
-        lines.push(msg);
-        if (lines.length > 5) lines.shift();
-        if (dbg) dbg.textContent = lines.join(' | ');
-    }
-    function setWarn(msg) { if (dbg) { dbg.textContent = msg; dbg.className = 'warn'; } }
+    function log() {}
+    function setWarn() {}
 
     // ── Telegram WebApp ──
     var tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
@@ -31,16 +21,9 @@ window.onerror = function(msg, src, line) {
         tg.expand();
         tg.ready();
         var hasInitData = tg.initData && tg.initData.length > 0;
-        var user = tg.initDataUnsafe && tg.initDataUnsafe.user;
-        log('v=' + tg.version);
-        log('platform=' + tg.platform);
-        log('initData=' + (hasInitData ? tg.initData.length + 'b' : 'EMPTY'));
-        log('user=' + (user ? user.first_name : 'N/A'));
         if (!hasInitData) {
             setWarn('WARNING: initData пуст — откройте через кнопку в Telegram.');
         }
-    } else {
-        log('TG SDK: NOT loaded (browser mode)');
     }
 
     function showAlert(text) {
@@ -52,7 +35,6 @@ window.onerror = function(msg, src, line) {
     // Otherwise, use sendData (production / GitHub Pages).
     var apiBase = document.body.getAttribute('data-api-base') || '';
     var useHttpApi = document.body.hasAttribute('data-api-base');
-    log('mode=' + (useHttpApi ? 'HTTP API' : 'sendData'));
 
     // ── Validation ──
     function showError(el, hint) { if (el) el.classList.add('field-error'); if (hint) hint.classList.add('visible'); }
@@ -187,7 +169,7 @@ window.onerror = function(msg, src, line) {
         }
         if (selectedTemplates.length === 0) { showError(null, hintTemplates); valid = false; }
 
-        if (!valid) { log('validation failed'); return null; }
+        if (!valid) return null;
 
         return {
             symbol: symbol,
@@ -215,12 +197,10 @@ window.onerror = function(msg, src, line) {
 
         submitBtn.disabled = true;
         submitBtn.textContent = 'Отправлено!';
-        log('sendData(' + JSON.stringify(payload).length + 'b)');
 
         try {
             tg.sendData(JSON.stringify(payload));
         } catch(e) {
-            log('sendData error: ' + e.message);
             showAlert('Ошибка: ' + e.message);
             submitBtn.disabled = false;
             submitBtn.textContent = 'Сгенерировать';
@@ -238,7 +218,6 @@ window.onerror = function(msg, src, line) {
 
         submitBtn.disabled = true;
         submitBtn.textContent = 'Генерирую...';
-        log('POST ' + apiBase + '/api/generate...');
 
         fetch(apiBase + '/api/generate', {
             method: 'POST',
@@ -248,18 +227,15 @@ window.onerror = function(msg, src, line) {
         .then(function(resp) { return resp.json().then(function(d) { return { status: resp.status, body: d }; }); })
         .then(function(result) {
             if (result.body.ok) {
-                log('done! ' + result.body.images_sent + ' image(s) sent');
                 submitBtn.textContent = 'Отправлено!';
                 setTimeout(function() { if (tg && tg.close) tg.close(); }, 1500);
             } else {
-                log('error: ' + result.body.error);
                 showAlert('Ошибка: ' + result.body.error);
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Сгенерировать';
             }
         })
         .catch(function(err) {
-            log('fetch error: ' + err.message);
             showAlert('Ошибка сети: ' + err.message);
             submitBtn.disabled = false;
             submitBtn.textContent = 'Сгенерировать';
@@ -285,6 +261,4 @@ window.onerror = function(msg, src, line) {
         // Reset lock after timeout (in case sendData doesn't close the WebApp)
         setTimeout(function() { isSubmitting = false; }, 5000);
     });
-
-    log('OK');
 })();

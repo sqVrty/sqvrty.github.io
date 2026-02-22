@@ -23,19 +23,6 @@ body {
     min-height: 100vh;
 }
 
-/* ── Debug bar ── */
-#debugBar {
-    position: sticky; top: 0; z-index: 9999;
-    background: #1a1a2e; color: #0f0;
-    font-family: monospace; font-size: 11px;
-    padding: 6px 12px;
-    border-bottom: 1px solid #333;
-    max-height: 100px; overflow-y: auto;
-    word-break: break-all; line-height: 1.4;
-}
-#debugBar.error { color: var(--red); }
-#debugBar.warn  { color: #f0b90b; }
-
 /* ── Layout ── */
 .app { max-width: 480px; margin: 0 auto; padding: 20px 16px 40px; }
 
