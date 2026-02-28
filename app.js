@@ -63,6 +63,8 @@ window.onerror = function() { return false; };
     var hintExit      = document.getElementById('hintExit');
     var hintMargin    = document.getElementById('hintMargin');
     var hintTemplates = document.getElementById('hintTemplates');
+    var accountBalanceField = document.getElementById('accountBalanceField');
+    var accountBalanceInput = document.getElementById('accountBalance');
 
     bindClear(symbolInput, hintSymbol);
     bindClear(entryInput, hintEntry);
@@ -88,7 +90,11 @@ window.onerror = function() { return false; };
         }
     }
     initToggle(directionTgl, function(val) { direction = val; updatePreview(); });
-    initToggle(marginModeTgl, function(val) { marginMode = val; });
+    initToggle(marginModeTgl, function(val) {
+        marginMode = val;
+        if (accountBalanceField) accountBalanceField.style.display = marginMode === 'Cross' ? 'block' : 'none';
+    });
+    if (accountBalanceField) accountBalanceField.style.display = marginMode === 'Cross' ? 'block' : 'none';
 
     for (var i = 0; i < templateCbs.length; i++) {
         (function(cb) {
@@ -164,7 +170,7 @@ window.onerror = function() { return false; };
 
         if (!valid) return null;
 
-        return {
+        var payload = {
             symbol: symbol,
             direction: direction,
             leverage: parseInt(leverageSlider.value, 10),
@@ -174,6 +180,11 @@ window.onerror = function() { return false; };
             margin_mode: marginMode,
             selected_templates: selectedTemplates
         };
+        if (marginMode === 'Cross' && accountBalanceInput) {
+            var bal = parseNum(accountBalanceInput.value);
+            if (bal && bal > 0) payload.account_balance = bal;
+        }
+        return payload;
     }
 
     // ── Send via sendData (production — GitHub Pages) ──

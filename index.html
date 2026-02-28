@@ -55,6 +55,17 @@
           </div>
         </div>
 
+        <div class="field" id="accountBalanceField" style="display: none;">
+          <label for="accountBalance">Баланс счёта (USDT)</label>
+          <input
+            type="text"
+            inputmode="decimal"
+            id="accountBalance"
+            placeholder="10000.00"
+          />
+          <div class="field-hint" id="hintBalance">Для расчёта MMR при кросс-марже</div>
+        </div>
+
         <div class="field">
           <label for="leverage"
             >Плечо: <span id="leverageValue" class="accent">20x</span></label
@@ -122,7 +133,14 @@
               <input type="checkbox" value="weex_main" />
               <span class="card-inner">
                 <span class="card-title">WEEX Карточка</span>
-                <span class="card-desc">Брендированная карта</span>
+                <span class="card-desc">Брендированная карта (ROI %)</span>
+              </span>
+            </label>
+            <label class="checkbox-card">
+              <input type="checkbox" value="weex_card_pnl" />
+              <span class="card-inner">
+                <span class="card-title">WEEX Карточка + PnL</span>
+                <span class="card-desc">Карта с ROI % и PnL в USDT</span>
               </span>
             </label>
           </div>
