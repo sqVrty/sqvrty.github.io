@@ -45,6 +45,7 @@ window.onerror = function() { return false; };
     // ── DOM refs ──
     var submitBtn      = document.getElementById('submitBtn');
     var symbolInput    = document.getElementById('symbol');
+    var nicknameInput  = document.getElementById('nickname');
     var leverageSlider = document.getElementById('leverage');
     var leverageLabel  = document.getElementById('leverageValue');
     var entryInput     = document.getElementById('entryPrice');
@@ -65,6 +66,8 @@ window.onerror = function() { return false; };
     var hintTemplates = document.getElementById('hintTemplates');
     var accountBalanceField = document.getElementById('accountBalanceField');
     var accountBalanceInput = document.getElementById('accountBalance');
+    var pnlUsdtRow      = document.getElementById('pnlUsdtRow');
+    var showPnlUsdtCb   = document.getElementById('showPnlUsdt');
 
     bindClear(symbolInput, hintSymbol);
     bindClear(entryInput, hintEntry);
@@ -96,14 +99,26 @@ window.onerror = function() { return false; };
     });
     if (accountBalanceField) accountBalanceField.style.display = marginMode === 'Cross' ? 'block' : 'none';
 
+    // Тумблер "PnL в USDT" виден только когда выбрана брендированная карточка (weex_main)
+    function updatePnlUsdtVisibility() {
+        if (!pnlUsdtRow) return;
+        var cardSelected = false;
+        for (var k = 0; k < templateCbs.length; k++) {
+            if (templateCbs[k].value === 'weex_main' && templateCbs[k].checked) cardSelected = true;
+        }
+        pnlUsdtRow.style.display = cardSelected ? 'flex' : 'none';
+    }
+
     for (var i = 0; i < templateCbs.length; i++) {
         (function(cb) {
             cb.addEventListener('change', function() {
                 cb.closest('.checkbox-card').classList.toggle('active', cb.checked);
                 clearError(null, hintTemplates);
+                updatePnlUsdtVisibility();
             });
         })(templateCbs[i]);
     }
+    updatePnlUsdtVisibility();
 
     if (leverageSlider) {
         leverageSlider.addEventListener('input', function() {
@@ -183,6 +198,13 @@ window.onerror = function() { return false; };
         if (marginMode === 'Cross' && accountBalanceInput) {
             var bal = parseNum(accountBalanceInput.value);
             if (bal && bal > 0) payload.account_balance = bal;
+        }
+        if (nicknameInput) {
+            var nick = nicknameInput.value.trim();
+            if (nick) payload.nickname = nick;
+        }
+        if (showPnlUsdtCb && showPnlUsdtCb.checked && selectedTemplates.indexOf('weex_main') !== -1) {
+            payload.show_pnl_usdt = true;
         }
         return payload;
     }

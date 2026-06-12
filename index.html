@@ -32,6 +32,19 @@
         </div>
 
         <div class="field">
+          <label for="nickname">Никнейм (необязательно)</label>
+          <input
+            type="text"
+            id="nickname"
+            placeholder="cryptonistx"
+            maxlength="32"
+          />
+          <div class="field-hint" id="hintNickname">
+            Отобразится на карточках. Оставьте пустым — не показывать
+          </div>
+        </div>
+
+        <div class="field">
           <label>Направление</label>
           <div class="toggle-group" id="directionToggle">
             <button type="button" class="toggle-btn active" data-value="Long">
@@ -133,19 +146,20 @@
               <input type="checkbox" value="weex_main" />
               <span class="card-inner">
                 <span class="card-title">WEEX Карточка</span>
-                <span class="card-desc">Брендированная карта (ROI %)</span>
-              </span>
-            </label>
-            <label class="checkbox-card">
-              <input type="checkbox" value="weex_card_pnl" />
-              <span class="card-inner">
-                <span class="card-title">WEEX Карточка + PnL</span>
-                <span class="card-desc">Карта с ROI % и PnL в USDT</span>
+                <span class="card-desc">Брендированная карта</span>
               </span>
             </label>
           </div>
           <div class="field-hint" id="hintTemplates">
             Выберите хотя бы один шаблон
+          </div>
+
+          <div class="switch-row" id="pnlUsdtRow" style="display: none">
+            <span class="switch-label">Добавить PnL в USDT на карточку</span>
+            <label class="ios-switch">
+              <input type="checkbox" id="showPnlUsdt" />
+              <span class="ios-slider"></span>
+            </label>
           </div>
         </div>
 
